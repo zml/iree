@@ -1,0 +1,72 @@
+load("//build_tools/bazel:build_defs.oss.bzl", "iree_runtime_cc_library")
+
+iree_runtime_cc_library(
+    name = "common",
+    srcs = [
+        "api_impl.cc",
+        "command_line_utils.cc",
+        "layout_utils.cc",
+        "platform.cc",
+        "tensor_utils.cc",
+    ],
+    hdrs = [
+        "api_impl.h",
+        "command_line_utils.h",
+        "dylib_entry_point.cc.inc",
+        "iree_helpers.h",
+        "layout_utils.h",
+        "platform.h",
+        "tensor_utils.h",
+    ],
+    copts = ["-Wno-unused-variable"],
+    includes = ["../.."],
+    textual_hdrs = ["stubs.inc"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":compiler",
+        "//integrations/pjrt/third_party/pjrt_c_api:headers",
+        "//runtime/src/iree/hal",
+        "//runtime/src/iree/modules/hal",
+        "//runtime/src/iree/vm",
+        "//runtime/src/iree/vm/bytecode:module",
+    ],
+)
+
+iree_runtime_cc_library(
+    name = "compiler",
+    srcs = [
+        "hlo_partitioner.cc",
+        "iree_compiler.cc",
+    ],
+    hdrs = ["compiler.h"],
+    includes = ["../.."],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":debugging",
+        "//compiler/bindings/c:headers",
+        "//compiler/bindings/c:loader",
+        "//integrations/pjrt/src/iree_pjrt/partitioner_api",
+        "//integrations/pjrt/src/iree_pjrt/partitioner_api:loader",
+        "//integrations/pjrt/third_party/pjrt_c_api:protos",
+    ],
+)
+
+iree_runtime_cc_library(
+    name = "debugging",
+    srcs = ["debugging.cc"],
+    hdrs = ["debugging.h"],
+    includes = ["../.."],
+    visibility = ["//visibility:public"],
+)
+
+iree_runtime_cc_library(
+    name = "dylib_platform",
+    srcs = ["dylib_platform.cc"],
+    hdrs = ["dylib_platform.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":common",
+        ":debugging",
+        "//runtime/src/iree/base/internal:path",
+    ],
+)

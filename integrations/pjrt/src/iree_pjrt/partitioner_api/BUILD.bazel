@@ -1,0 +1,21 @@
+load("//build_tools/bazel:build_defs.oss.bzl", "iree_runtime_cc_library", "iree_runtime_cc_test")
+
+iree_runtime_cc_library(
+    name = "partitioner_api",
+    hdrs = [
+        "embedding_api.h",
+        "loader.h",
+    ],
+    includes = ["../.."],
+    visibility = ["//visibility:public"],
+)
+
+iree_runtime_cc_library(
+    name = "loader",
+    srcs = [
+      "loader/handle_symbols.inc",
+      "loader/loader.cpp",
+    ],
+    deps = [":partitioner_api"],
+    visibility = ["//visibility:public"],
+)

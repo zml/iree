@@ -1,0 +1,70 @@
+# Copyright 2019 The IREE Authors
+#
+# Licensed under the Apache License v2.0 with LLVM Exceptions.
+# See https://llvm.org/LICENSE.txt for license information.
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+# HAL implementation using Vulkan and (likely) SPIR-V executables.
+
+load("@rules_cc//cc:objc_library.bzl", "objc_library")
+
+package(
+    default_visibility = ["//visibility:public"],
+    # features = ["layering_check"],
+    licenses = ["notice"],  # Apache 2.0
+)
+
+objc_library(
+    name = "metal",
+    srcs = [
+        "builtin_executables.h",
+        "direct_allocator.h",
+        "direct_command_buffer.h",
+        "executable.h",
+        "metal_buffer.h",
+        "metal_device.h",
+        "nop_executable_cache.h",
+        "shared_event.h",
+        "staging_buffer.h",
+    ],
+    hdrs = [
+        "api.h",
+    ],
+    copts = [
+        "-Wno-error=shorten-64-to-32",
+    ],
+    non_arc_srcs = [
+        "builtin_executables.m",
+        "direct_allocator.m",
+        "direct_command_buffer.m",
+        "executable.m",
+        "metal_buffer.m",
+        "metal_device.m",
+        "metal_driver.m",
+        "nop_executable_cache.m",
+        "shared_event.m",
+        "staging_buffer.m",
+    ],
+    sdk_frameworks = [
+        "Foundation",
+        "Metal",
+    ],
+    deps = [
+        "//runtime/src/iree/base",
+        "//runtime/src/iree/base/internal",
+        "//runtime/src/iree/base/internal:arena",
+        "//runtime/src/iree/base/internal/flatcc:parsing",
+        "//runtime/src/iree/hal",
+        "//runtime/src/iree/hal/drivers/metal/builtin",
+        "//runtime/src/iree/hal/utils:deferred_command_buffer",
+        "//runtime/src/iree/hal/utils:executable_debug_info",
+        "//runtime/src/iree/hal/utils:file_transfer",
+        "//runtime/src/iree/hal/utils:files",
+        "//runtime/src/iree/hal/utils:queue_emulation",
+        "//runtime/src/iree/hal/utils:queue_host_call_emulation",
+        "//runtime/src/iree/hal/utils:resource_set",
+        "//runtime/src/iree/schemas:executable_debug_info_c_fbs",
+        "//runtime/src/iree/schemas:metal_executable_def_c_fbs",
+    ],
+    alwayslink = True,
+)

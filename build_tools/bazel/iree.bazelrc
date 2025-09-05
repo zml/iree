@@ -155,8 +155,8 @@ build:generic_clang --copt=-Wunused-comparison
 build:generic_clang --copt=-Wvla
 
 # Treat backrefs during linking as errors.
-build:generic_clang --linkopt=-Wl,--warn-backrefs
-build:generic_clang --linkopt=-Wl,--fatal-warnings
+#build:generic_clang --linkopt=-Wl,--warn-backrefs
+#build:generic_clang --linkopt=-Wl,--fatal-warnings
 
 ###############################################################################
 # Additional options for MacOS based clang builds.

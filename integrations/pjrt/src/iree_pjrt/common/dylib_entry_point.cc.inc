@@ -100,6 +100,6 @@ static_assert(
 
 unsigned GetPjrtApiVersion() { return 1; }
 
-PJRT_Api* GetPjrtApi() {
+PJRT_PLUGIN_EXPORTED PJRT_Api* GetPjrtApi() {
   return iree::pjrt::GetInitializedAPIStruct();
 }

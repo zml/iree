@@ -190,6 +190,7 @@ static iree_status_t iree_hal_metal_driver_query_available_devices(
 // belong to a GPU family considered by IREE right now.
 static MTLGPUFamily iree_hal_metal_apple_gpu_family_query(id<MTLDevice> device) {
   // Inspect whether the given device is a specific Apple GPU.
+  if ([device supportsFamily:MTLGPUFamilyApple9]) return MTLGPUFamilyApple9;
   if ([device supportsFamily:MTLGPUFamilyApple8]) return MTLGPUFamilyApple8;
   if ([device supportsFamily:MTLGPUFamilyApple7]) return MTLGPUFamilyApple7;
   if ([device supportsFamily:MTLGPUFamilyApple6]) return MTLGPUFamilyApple6;
@@ -209,6 +210,8 @@ static MTLGPUFamily iree_hal_metal_apple_gpu_family_query(id<MTLDevice> device) 
 
 static const char* iree_hal_metal_get_gpu_family_name(MTLGPUFamily family) {
   switch (family) {
+    case MTLGPUFamilyApple9:
+      return "apple9(a17/m3/m4)";
     case MTLGPUFamilyApple8:
       return "apple8(a15/m2)";
     case MTLGPUFamilyApple7:

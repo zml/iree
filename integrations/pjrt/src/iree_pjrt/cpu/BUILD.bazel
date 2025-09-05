@@ -1,0 +1,37 @@
+load("@rules_cc//cc:cc_shared_library.bzl", "cc_shared_library")
+load("//build_tools/bazel:build_defs.oss.bzl", "iree_runtime_cc_library")
+
+iree_runtime_cc_library(
+    name = "client",
+    srcs = ["client.cc"],
+    hdrs = ["client.h"],
+    copts = ["-Wno-unused-variable"],
+    includes = ["../.."],
+    deps = [
+        "//integrations/pjrt/src/iree_pjrt/common",
+        "//runtime/src/iree/hal/drivers/local_sync:sync_driver",
+        "//runtime/src/iree/hal/drivers/local_task:task_driver",
+        "//runtime/src/iree/hal/local",
+        "//runtime/src/iree/hal/local/loaders/registration",
+        "//runtime/src/iree/hal/local/plugins/registration",
+        "//runtime/src/iree/task:api",
+    ],
+)
+
+iree_runtime_cc_library(
+    name = "dylib",
+    srcs = [
+        "dylib_entry_point.cc",
+    ],
+    defines = ["PJRT_PLUGIN_BUILDING_LIBRARY"],
+    deps = [
+        ":client",
+        "//integrations/pjrt/src/iree_pjrt/common",
+        "//integrations/pjrt/src/iree_pjrt/common:dylib_platform",
+    ],
+)
+
+cc_shared_library(
+    name = "pjrt_plugin_iree_cpu",
+    deps = [":dylib"],
+)

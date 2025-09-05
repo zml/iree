@@ -16,10 +16,10 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 # Skylib
 http_archive(
     name = "bazel_skylib",
-    sha256 = "74d544d96f4a5bb630d465ca8bbcfe231e3594e5aae57e1edbf17a6eb3ca2506",
+    sha256 = "51b5105a760b353773f904d2bbc5e664d0987fbaf22265164de65d43e910d8ac",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.8.1/bazel-skylib-1.8.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.8.1/bazel-skylib-1.8.1.tar.gz",
     ],
 )
 
@@ -27,6 +27,28 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 ###############################################################################
+
+http_archive(
+    name = "bazel_features",
+    sha256 = "06a9691becc357c1e4af011b9fb3239097503ce00607d9eb6b11ea0fac304039",
+    strip_prefix = "bazel_features-1.35.0",
+    url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.35.0/bazel_features-v1.35.0.tar.gz",
+)
+
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
+http_archive(
+    name = "rules_cc",
+    sha256 = "88661aba2ad049ae0be36eca8222c1911a397c077776aba8efa42b737eaa3152",
+    strip_prefix = "rules_cc-0.2.3",
+    url = "https://github.com/bazelbuild/rules_cc/releases/download/0.2.3/rules_cc-0.2.3.tar.gz",
+)
+
+load("@rules_cc//cc:extensions.bzl", "compatibility_proxy_repo")
+
+compatibility_proxy_repo()
 
 ###############################################################################
 # llvm-project
@@ -87,3 +109,72 @@ maybe(
         "https://github.com/facebook/zstd/releases/download/v1.5.2/zstd-1.5.2.tar.gz",
     ],
 )
+
+###############################################################################
+maybe(
+    http_archive,
+    name = "com_google_protobuf",
+    sha256 = "3d32940e975c4ad9b8ba69640e78f5527075bae33ca2890275bf26b853c0962c",
+    strip_prefix = "protobuf-29.1",
+    urls = [
+        "https://github.com/protocolbuffers/protobuf/releases/download/v29.1/protobuf-29.1.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "build_bazel_apple_support",
+    sha256 = "ee20cc5c0bab47065473c8033d462374dd38d172406ecc8de5c8f08487943f2f",
+    url = "https://github.com/bazelbuild/apple_support/releases/download/1.23.1/apple_support.1.23.1.tar.gz",
+)
+
+load(
+    "@build_bazel_apple_support//lib:repositories.bzl",
+    "apple_support_dependencies",
+)
+
+apple_support_dependencies()
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+# load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
+
+# rules_java_dependencies()
+
+load("@rules_java//java:repositories.bzl", "rules_java_toolchains")
+
+rules_java_toolchains()
+
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
+
+http_archive(
+    name = "build_bazel_rules_apple",
+    sha256 = "de1c8bb872da6b03d2abff659178d3abfda5cc8d8a6b646fdab96ab2d00c9fa7",
+    url = "https://github.com/bazelbuild/rules_apple/releases/download/4.1.2/rules_apple.4.1.2.tar.gz",
+)
+
+load(
+    "@build_bazel_rules_apple//apple:repositories.bzl",
+    "apple_rules_dependencies",
+)
+
+apple_rules_dependencies()
+
+load(
+    "@build_bazel_rules_swift//swift:repositories.bzl",
+    "swift_rules_dependencies",
+)
+
+swift_rules_dependencies()
+
+load(
+    "@build_bazel_rules_swift//swift:extras.bzl",
+    "swift_rules_extra_dependencies",
+)
+
+swift_rules_extra_dependencies()
+
+apple_support_dependencies()

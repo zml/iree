@@ -20,6 +20,7 @@ string_list_flag(
         "cuda",
         "local-sync",
         "local-task",
+        "metal",
         "null",
         "vulkan",
     ],
@@ -28,6 +29,7 @@ string_list_flag(
 UNCONDITIONAL_DRIVERS = [
     "local-sync",
     "local-task",
+    "metal",
     "null",
     "vulkan",
 ]
@@ -79,6 +81,10 @@ iree_runtime_cc_library(
            }) +
            select({
                ":local-task_enabled": ["//runtime/src/iree/hal/drivers/local_task/registration"],
+               "//conditions:default": [],
+           }) +
+           select({
+               ":metal_enabled": ["//runtime/src/iree/hal/drivers/metal/registration"],
                "//conditions:default": [],
            }) +
            select({

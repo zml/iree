@@ -1,0 +1,45 @@
+load("@com_google_protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//build_tools/bazel:build_defs.oss.bzl", "iree_runtime_cc_library")
+
+iree_runtime_cc_library(
+    name = "headers",
+    hdrs = ["xla/pjrt/c/pjrt_c_api.h"],
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "xla_data_proto",
+    srcs = ["xla/xla_data.proto"],
+    import_prefix = "xla",
+    strip_import_prefix = "xla",
+)
+
+proto_library(
+    name = "compile_options_proto",
+    srcs = ["xla/pjrt/compile_options.proto"],
+    import_prefix = "xla",
+    strip_import_prefix = "xla",
+    deps = [":xla_data_proto"],
+)
+
+cc_proto_library(
+    name = "compile_options_proto_cc",
+    deps = [":compile_options_proto"],
+)
+
+cc_proto_library(
+    name = "xla_data_proto_cc",
+    deps = [":xla_data_proto"],
+)
+
+cc_library(
+    name = "protos",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":compile_options_proto_cc",
+        ":xla_data_proto_cc",
+    ],
+)
